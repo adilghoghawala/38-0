@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { TEAM_ERAS, fetchEraPlayers, simulate, getGrade } from "../data/api";
+import { TEAM_ERAS, simulate, getGrade } from "../data/teams";
+import { fetchEraPlayers } from "../data/fetchPlayers";
 
 export function useGameState() {
   const [phase, setPhase] = useState("spin");
@@ -18,7 +19,7 @@ export function useGameState() {
 
   const TOTAL_ROUNDS = 5;
 
-  function spinDisplay2(teamEra) {
+  function toDisplay(teamEra) {
     const parts = teamEra.split(" ");
     return { era: parts[0], team: parts.slice(1).join(" ") };
   }
@@ -32,16 +33,16 @@ export function useGameState() {
     if (!available.length) available = [...TEAM_ERAS];
     const final = available[Math.floor(Math.random() * available.length)];
 
-    // Animate spin
-    let count = 0;
+    // Animate the slot machine
     await new Promise(resolve => {
+      let count = 0;
       const interval = setInterval(() => {
         const rand = TEAM_ERAS[Math.floor(Math.random() * TEAM_ERAS.length)];
-        setSpinDisplay(spinDisplay2(rand));
+        setSpinDisplay(toDisplay(rand));
         count++;
         if (count > 16) {
           clearInterval(interval);
-          setSpinDisplay(spinDisplay2(final));
+          setSpinDisplay(toDisplay(final));
           resolve();
         }
       }, 75);
@@ -57,7 +58,7 @@ export function useGameState() {
       setUsedEras(prev => new Set([...prev, final]));
       setPhase("pick");
     } catch (err) {
-      setLoadError("Couldn't load player data. Try spinning again.");
+      setLoadError("Couldn't load player data. Try again.");
       setSpinDisplay({ era: "—", team: "—" });
     } finally {
       setIsLoading(false);
@@ -74,17 +75,13 @@ export function useGameState() {
     setPhase("spin");
   }
 
-  function selectPos(pos) {
-    setSelectedPos(pos);
-  }
+  function selectPos(pos) { setSelectedPos(pos); }
 
   function pickPlayer(playerName) {
     const player = currentPlayers.find(p => p.name === playerName);
     if (!player || !selectedPos) return;
-
     const newRoster = { ...roster, [selectedPos]: { ...player, _era: currentSpin } };
     setRoster(newRoster);
-
     const newRound = round + 1;
     setRound(newRound);
     setCurrentSpin(null);
@@ -95,17 +92,11 @@ export function useGameState() {
   }
 
   function reset() {
-    setPhase("spin");
-    setRound(0);
-    setRoster({});
-    setCurrentSpin(null);
-    setCurrentPlayers([]);
-    setSelectedPos(null);
-    setSkipsLeft(1);
-    setUsedEras(new Set());
-    setIsSpinning(false);
-    setIsLoading(false);
-    setLoadError(null);
+    setPhase("spin"); setRound(0); setRoster({});
+    setCurrentSpin(null); setCurrentPlayers([]);
+    setSelectedPos(null); setSkipsLeft(1);
+    setUsedEras(new Set()); setIsSpinning(false);
+    setIsLoading(false); setLoadError(null);
     setSpinDisplay({ era: "—", team: "—" });
   }
 
@@ -118,7 +109,6 @@ export function useGameState() {
     phase, round, roster, currentSpin, currentPlayers, selectedPos,
     skipsLeft, isSpinning, isLoading, loadError, spinDisplay, hoopIQ,
     TOTAL_ROUNDS, result,
-    doSpin, doSkip, selectPos, pickPlayer, reset,
-    setHoopIQ,
+    doSpin, doSkip, selectPos, pickPlayer, reset, setHoopIQ,
   };
 }
