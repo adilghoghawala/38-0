@@ -4,6 +4,7 @@ import { RosterGrid } from "./components/RosterGrid";
 import { SlotMachine } from "./components/SlotMachine";
 import { PickPanel } from "./components/PickPanel";
 import { ResultScreen } from "./components/ResultScreen";
+import { THRESHOLDS } from "./data/api";
 
 export default function App() {
   const game = useGameState();
@@ -21,9 +22,7 @@ export default function App() {
               onClick={() => game.setHoopIQ(h => !h)}
               className={"relative w-10 h-5 rounded-full border transition-all cursor-pointer " + (game.hoopIQ ? "bg-blue-500/40 border-blue-400/50" : "bg-white/10 border-white/10")}
             >
-              <span
-                className={"absolute top-0.5 w-4 h-4 rounded-full transition-all " + (game.hoopIQ ? "left-5 bg-blue-300" : "left-0.5 bg-white/30")}
-              />
+              <span className={"absolute top-0.5 w-4 h-4 rounded-full transition-all " + (game.hoopIQ ? "left-5 bg-blue-300" : "left-0.5 bg-white/30")} />
             </button>
             <span className="text-xs text-white/30">Stats hidden</span>
           </div>
@@ -52,6 +51,8 @@ export default function App() {
               <SlotMachine
                 spinDisplay={game.spinDisplay}
                 isSpinning={game.isSpinning}
+                isLoading={game.isLoading}
+                loadError={game.loadError}
                 phase={game.phase}
                 round={game.round}
                 totalRounds={game.TOTAL_ROUNDS}
@@ -67,6 +68,7 @@ export default function App() {
                 >
                   <PickPanel
                     currentSpin={game.currentSpin}
+                    players={game.currentPlayers}
                     roster={game.roster}
                     selectedPos={game.selectedPos}
                     hoopIQ={game.hoopIQ}
@@ -93,7 +95,7 @@ export default function App() {
         </AnimatePresence>
 
         <div className="mt-8 text-center text-[10px] text-white/15">
-          Scoring: pts floor 115 · reb 47 · ast 26 · stl 6.5 · blk 4.5
+          Scoring: pts floor {THRESHOLDS.pts} · reb {THRESHOLDS.reb} · ast {THRESHOLDS.ast} · stl {THRESHOLDS.stl} · blk {THRESHOLDS.blk}
         </div>
       </div>
     </div>
