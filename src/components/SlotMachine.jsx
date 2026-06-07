@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 
-export function SlotMachine({ spinDisplay, isSpinning, phase, round, totalRounds, skipsLeft, onSpin, onSkip }) {
+export function SlotMachine({ spinDisplay, isSpinning, isLoading, loadError, phase, round, totalRounds, skipsLeft, onSpin, onSkip }) {
+  const busy = isSpinning || isLoading;
   return (
     <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-4 text-center">
       <div className="text-xs text-white/40 uppercase tracking-widest mb-4">
@@ -12,12 +13,19 @@ export function SlotMachine({ spinDisplay, isSpinning, phase, round, totalRounds
         <SlotBox label="Team" value={spinDisplay.team} spinning={isSpinning} />
       </div>
 
+      {isLoading && (
+        <div className="text-xs text-white/40 mb-3 animate-pulse">Loading player data...</div>
+      )}
+      {loadError && (
+        <div className="text-xs text-red-400 mb-3">{loadError}</div>
+      )}
+
       <button
         onClick={onSpin}
-        disabled={phase !== "spin" || isSpinning}
+        disabled={phase !== "spin" || busy}
         className="px-8 py-2.5 rounded-xl border border-white/20 text-sm font-medium text-white hover:bg-white/10 active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
       >
-        {isSpinning ? "Spinning..." : "Spin"}
+        {isSpinning ? "Spinning..." : isLoading ? "Loading..." : "Spin"}
       </button>
 
       <div className="mt-3 flex items-center justify-center gap-2">

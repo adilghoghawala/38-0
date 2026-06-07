@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { POSITIONS, THRESHOLDS } from "../data/players";
+import { POSITIONS, THRESHOLDS } from "../data/api";
 import html2canvas from "html2canvas";
 
 const STAT_LABELS = { pts: "Points", reb: "Rebounds", ast: "Assists", stl: "Steals", blk: "Blocks" };
@@ -12,7 +12,7 @@ export function ResultScreen({ result, roster, onReset }) {
   async function shareResult() {
     if (!cardRef.current) return;
     try {
-      const canvas = await html2canvas(cardRef.current, { backgroundColor: "#0a0a0a", scale: 2 });
+      const canvas = await html2canvas(cardRef.current, { backgroundColor: "#0f0f0f", scale: 2 });
       const url = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.download = "38-0-result.png";
@@ -27,7 +27,6 @@ export function ResultScreen({ result, roster, onReset }) {
     <div className="space-y-4">
       <div ref={cardRef} className="bg-[#0f0f0f] border border-white/10 rounded-2xl p-6 text-center">
         <div className="text-[10px] text-white/30 uppercase tracking-widest mb-3">38-0 · NBA Playoffs</div>
-
         <div className={`text-6xl font-bold mb-1 ${color}`}>{record}</div>
         <div className="text-xl font-medium text-white mb-1">{grade}</div>
         <div className="text-sm text-white/40 mb-6">{flavor}</div>
@@ -68,16 +67,10 @@ export function ResultScreen({ result, roster, onReset }) {
       </div>
 
       <div className="flex gap-3">
-        <button
-          onClick={shareResult}
-          className="flex-1 py-2.5 rounded-xl border border-white/20 text-sm text-white/70 hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
-        >
+        <button onClick={shareResult} className="flex-1 py-2.5 rounded-xl border border-white/20 text-sm text-white/70 hover:bg-white/5 active:scale-95 transition-all cursor-pointer">
           Save as image
         </button>
-        <button
-          onClick={onReset}
-          className="flex-1 py-2.5 rounded-xl border border-white/20 text-sm text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
-        >
+        <button onClick={onReset} className="flex-1 py-2.5 rounded-xl border border-white/20 text-sm text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer">
           Play again
         </button>
       </div>

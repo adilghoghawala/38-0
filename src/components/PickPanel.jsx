@@ -1,9 +1,8 @@
-import { PLAYERS, POSITIONS, playerRating } from "../data/players";
+import { POSITIONS, playerRating } from "../data/api";
 
-export function PickPanel({ currentSpin, roster, selectedPos, hoopIQ, onSelectPos, onPickPlayer }) {
+export function PickPanel({ currentSpin, players, roster, selectedPos, hoopIQ, onSelectPos, onPickPlayer }) {
   if (!currentSpin) return null;
 
-  const players = PLAYERS[currentSpin] || [];
   const filledPositions = new Set(Object.keys(roster));
   const availablePositions = POSITIONS.filter(p => !filledPositions.has(p));
 
@@ -50,12 +49,11 @@ export function PickPanel({ currentSpin, roster, selectedPos, hoopIQ, onSelectPo
                 <div className="text-sm font-medium text-white">
                   {hoopIQ ? "???" : player.name}
                 </div>
-                {!hoopIQ && (
+                {!hoopIQ ? (
                   <div className="text-[11px] text-white/40 mt-0.5">
                     {player.pts.toFixed(1)} pts · {player.reb.toFixed(1)} reb · {player.ast.toFixed(1)} ast · {player.stl.toFixed(1)} stl · {player.blk.toFixed(1)} blk
                   </div>
-                )}
-                {hoopIQ && (
+                ) : (
                   <div className="text-[11px] text-white/30 mt-0.5">Stats hidden — trust your gut</div>
                 )}
               </div>
