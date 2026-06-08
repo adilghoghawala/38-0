@@ -1,4 +1,4 @@
-import { POSITIONS } from "../data/teams";
+import { POSITIONS } from "../data/players";
 
 export function RosterGrid({ roster }) {
   return (
@@ -6,7 +6,7 @@ export function RosterGrid({ roster }) {
       {POSITIONS.map(pos => {
         const p = roster[pos];
         return (
-          <div key={pos} className={"rounded-xl border p-3 min-h-[90px] transition-all " + (p ? "bg-white/5 border-white/10" : "bg-white/[0.02] border-white/5 border-dashed")}>
+          <div key={pos} className={"rounded-xl border p-3 min-h-[90px] " + (p ? "bg-white/5 border-white/10" : "bg-white/[0.02] border-white/5 border-dashed")}>
             <div className="text-[10px] font-semibold text-white/30 uppercase tracking-widest mb-1">{pos}</div>
             {p ? (
               <>

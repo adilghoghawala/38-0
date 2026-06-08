@@ -1,12 +1,11 @@
 import { useRef } from "react";
-import { POSITIONS, THRESHOLDS } from "../data/teams";
+import { POSITIONS, THRESHOLDS } from "../data/players";
 import html2canvas from "html2canvas";
 
 const STAT_LABELS = { pts: "Points", reb: "Rebounds", ast: "Assists", stl: "Steals", blk: "Blocks" };
 
 export function ResultScreen({ result, roster, onReset }) {
   const { wins, totals, record, grade, flavor, color } = result;
-  const perfect = wins === 38;
   const cardRef = useRef(null);
 
   async function shareResult() {
@@ -51,7 +50,7 @@ export function ResultScreen({ result, roster, onReset }) {
             );
           })}
         </div>
-        {perfect && <div className="mt-4 text-yellow-400/80 text-xs font-medium tracking-wide">Perfect. The GOAT lineup.</div>}
+        {wins === 38 && <div className="mt-4 text-yellow-400/80 text-xs font-medium tracking-wide">Perfect. The GOAT lineup.</div>}
       </div>
       <div className="flex gap-3">
         <button onClick={shareResult} className="flex-1 py-2.5 rounded-xl border border-white/20 text-sm text-white/70 hover:bg-white/5 active:scale-95 transition-all cursor-pointer">Save as image</button>

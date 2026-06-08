@@ -1,7 +1,8 @@
-import { POSITIONS, playerRating } from "../data/teams";
+import { PLAYERS, POSITIONS, playerRating } from "../data/players";
 
-export function PickPanel({ currentSpin, players, roster, selectedPos, hoopIQ, onSelectPos, onPickPlayer }) {
+export function PickPanel({ currentSpin, roster, selectedPos, hoopIQ, onSelectPos, onPickPlayer }) {
   if (!currentSpin) return null;
+  const players = PLAYERS[currentSpin] || [];
   const filledPositions = new Set(Object.keys(roster));
   const availablePositions = POSITIONS.filter(p => !filledPositions.has(p));
   const eligibleForSelected = selectedPos
@@ -24,9 +25,7 @@ export function PickPanel({ currentSpin, players, roster, selectedPos, hoopIQ, o
       </div>
       {selectedPos && (
         <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-          {eligibleForSelected.length === 0 && (
-            <div className="text-xs text-white/30 py-2">No eligible {selectedPos}s from this team/era</div>
-          )}
+          {eligibleForSelected.length === 0 && <div className="text-xs text-white/30 py-2">No eligible {selectedPos}s from this team/era</div>}
           {eligibleForSelected.map(player => (
             <button key={player.name} onClick={() => onPickPlayer(player.name)}
               className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-white/8 bg-white/[0.03] hover:bg-white/8 active:scale-[0.99] transition-all text-left cursor-pointer">
