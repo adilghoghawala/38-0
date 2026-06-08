@@ -4,7 +4,7 @@ import { RosterGrid } from "./components/RosterGrid";
 import { SlotMachine } from "./components/SlotMachine";
 import { PickPanel } from "./components/PickPanel";
 import { ResultScreen } from "./components/ResultScreen";
-import { THRESHOLDS } from "./data/teams";
+import { THRESHOLDS } from "./data/players";
 
 export default function App() {
   const game = useGameState();
@@ -23,32 +23,25 @@ export default function App() {
             <span className="text-xs text-white/30">Stats hidden</span>
           </div>
         </div>
-
         <div className="flex justify-center gap-2 mb-6">
           {Array.from({ length: game.TOTAL_ROUNDS }).map((_, i) => (
             <motion.div key={i}
-              className={"w-2 h-2 rounded-full transition-colors " + (i < game.round ? "bg-green-400" : i === game.round && game.phase !== "result" ? "bg-blue-400" : "bg-white/10")}
+              className={"w-2 h-2 rounded-full " + (i < game.round ? "bg-green-400" : i === game.round && game.phase !== "result" ? "bg-blue-400" : "bg-white/10")}
               animate={{ scale: i === game.round && game.phase !== "result" ? 1.3 : 1 }} />
           ))}
         </div>
-
         <AnimatePresence mode="wait">
           {game.phase !== "result" ? (
             <motion.div key="draft" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
               <RosterGrid roster={game.roster} />
-              <SlotMachine
-                spinDisplay={game.spinDisplay} isSpinning={game.isSpinning}
-                isLoading={game.isLoading} loadError={game.loadError}
+              <SlotMachine spinDisplay={game.spinDisplay} isSpinning={game.isSpinning}
                 phase={game.phase} round={game.round} totalRounds={game.TOTAL_ROUNDS}
-                skipsLeft={game.skipsLeft} onSpin={game.doSpin} onSkip={game.doSkip}
-              />
+                skipsLeft={game.skipsLeft} onSpin={game.doSpin} onSkip={game.doSkip} />
               {game.phase === "pick" && game.currentSpin && (
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
-                  <PickPanel
-                    currentSpin={game.currentSpin} players={game.currentPlayers}
-                    roster={game.roster} selectedPos={game.selectedPos}
-                    hoopIQ={game.hoopIQ} onSelectPos={game.selectPos} onPickPlayer={game.pickPlayer}
-                  />
+                  <PickPanel currentSpin={game.currentSpin} roster={game.roster}
+                    selectedPos={game.selectedPos} hoopIQ={game.hoopIQ}
+                    onSelectPos={game.selectPos} onPickPlayer={game.pickPlayer} />
                 </motion.div>
               )}
             </motion.div>
@@ -58,7 +51,6 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-
         <div className="mt-8 text-center text-[10px] text-white/15">
           Scoring: pts floor {THRESHOLDS.pts} · reb {THRESHOLDS.reb} · ast {THRESHOLDS.ast} · stl {THRESHOLDS.stl} · blk {THRESHOLDS.blk}
         </div>
